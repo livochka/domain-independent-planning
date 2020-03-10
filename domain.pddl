@@ -1,5 +1,5 @@
 (define (domain taxi)
-	(:requirements :strips :typing)  ????
+	(:requirements :strips :typing) 
 	(:types car person - movable
 	 		location)
 
@@ -8,31 +8,29 @@
 		(at ?obj1 - movable ?loc1 - location)
 		(connected ?loc1 - location ?loc2 - location)
 		(empty ?obj1 - car)
-		(free ?loc1 - location)
 		(inside ?obj1 - person ?obj2 - car)
 		(waiting ?oj1 - person)
 		(destination ?obj1 - person ?loc1 - location)
 	)
 
 
-
 	(:functions
     		(payment ?obj1 - person)
     		(total-revenue))
 
+    (:functions
+    		(distance ?loc1 - location ?loc2 - location)
+    		(total-distance))
 
 
 	(:action move
 		:parameters (?car1 - car ?locfrom - location ?locto - location)
 		:precondition (and 
 							(at ?car1 ?locfrom)
-							(free ?locto)
 							(connected ?locfrom ?locto))
 		:effect 	  (and
 							(not (at ?car1 ?locfrom))
-							(not (free ?locto))
-							(at ?car1 ?locto)
-							(free ?locfrom)))
+							(at ?car1 ?locto))
 
 
 
