@@ -1,36 +1,42 @@
 (define (domain taxi)
-	(:requirements :strips :typing) 
-	(:types car person - movable
+	(:requirements :strips :typing :fluents :durative-actions) 
+	(:types player
+	        car - unit
+	        person - passenger
+	        passenger, unit - movable
 	 		location)
 
 
 	(:predicates
+	    (is-enemy ?p1 ?p2 - player) 
+	    (has-unit ?p - player ?u - unit)
 		(at ?obj1 - movable ?loc1 - location)
 		(connected ?loc1 - location ?loc2 - location)
 		(empty ?obj1 - car)
 		(inside ?obj1 - person ?obj2 - car)
 		(waiting ?oj1 - person)
 		(destination ?obj1 - person ?loc1 - location)
+		
 	)
 
 
 	(:functions
     		(payment ?obj1 - person)
-    		(total-revenue))
-
-    (:functions
-    		(distance ?loc1 - location ?loc2 - location)
-    		(total-distance))
+    		(distance ?locfrom - location ?locto - location)
+    		(total-revenue ?obj1 - player))
 
 
-	(:action move
+
+
+	(:durative-action move
 		:parameters (?car1 - car ?locfrom - location ?locto - location)
+		:duration (= ?distance (distance ?locfrom ?locto))
 		:precondition (and 
 							(at ?car1 ?locfrom)
 							(connected ?locfrom ?locto))
 		:effect 	  (and
 							(not (at ?car1 ?locfrom))
-							(at ?car1 ?locto))
+							(at ?car1 ?locto)))
 
 
 
