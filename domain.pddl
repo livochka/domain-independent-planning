@@ -1,5 +1,5 @@
 (define (domain taxi)
-	(:requirements :strips :typing :fluents :durative-actions) 
+	(:requirements :durative-actions :strips :typing :fluents) 
 	(:types player
 	        car - unit
 	        person - passenger
@@ -23,7 +23,8 @@
 	(:functions
     		(payment ?obj1 - person)
     		(distance ?locfrom - location ?locto - location)
-    		(total-revenue ?obj1 - player))
+    		(total-revenue1 ?obj1 - player)
+    		(total-revenue2 ?obj2 - player))
 
 
 

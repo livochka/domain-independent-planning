@@ -1,11 +1,16 @@
 (define (problem taxi-example)
 
 	(:domain taxi)
-	(:objects car1 - car
+	(:objects player1 player2- player
+			  car1 car2 - unit
 			  pas1 - passenger
 			  loc1 loc2 loc3 loc4 loc5 - location)
 
-	(:init (at car1 loc1)
+	(:init 
+		   (has-unit player1 car1)
+		   (has-unit player2 car2)
+		   (is-enemy player1 player2)
+		   (at car1 loc1)
 		   (empty car1) 
 		   (at pas1 loc2)
 		   (waiting pas1)
