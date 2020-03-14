@@ -31,7 +31,7 @@
 	(:durative-action move
 		:parameters (?player1 - player ?unit1 - unit 
 					 ?locfrom - location ?locto - location)
-		:duration (= ?distance (distance ?locfrom ?locto))
+		:duration (= ?duration (distance ?locfrom ?locto))
 		:precondition (and  
 							(has-unit ?player1 ?unit1)
 							(at ?unit1 ?locfrom)
