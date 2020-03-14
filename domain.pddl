@@ -12,8 +12,8 @@
 	    (has-unit ?p - player ?u - unit)
 		(at ?obj1 - movable ?loc1 - location)
 		(connected ?loc1 - location ?loc2 - location)
-		(empty ?obj1 - car)
-		(inside ?obj1 - person ?obj2 - car)
+		(empty ?obj1 - unit)
+		(inside ?obj1 - person ?obj2 - unit)
 		(waiting ?oj1 - person)
 		(destination ?obj1 - person ?loc1 - location)
 		
@@ -23,46 +23,48 @@
 	(:functions
     		(payment ?obj1 - person)
     		(distance ?locfrom - location ?locto - location)
-    		(total-revenue1 ?obj1 - player)
-    		(total-revenue2 ?obj2 - player))
+    		(total-revenue ?obj - player))
 
 
 
 
 	(:durative-action move
-		:parameters (?car1 - car ?locfrom - location ?locto - location)
+		:parameters (?player1 - player ?unit1 - unit 
+					 ?locfrom - location ?locto - location)
 		:duration (= ?distance (distance ?locfrom ?locto))
-		:precondition (and 
-							(at ?car1 ?locfrom)
+		:precondition (and  
+							(has-unit ?player1 ?unit1)
+							(at ?unit1 ?locfrom)
 							(connected ?locfrom ?locto))
 		:effect 	  (and
-							(not (at ?car1 ?locfrom))
-							(at ?car1 ?locto)))
+							(not (at ?unit1 ?locfrom))
+							(at ?unit1 ?locto)))
 
 
 
 	(:action load
-		:parameters (?car1 - car ?loc - location ?per1 - person)
+		:parameters (?player1 - player ?unit1 - unit ?loc - location ?per1 - person)
 		:precondition (and 
-							(at ?car1 ?loc)
+							(has-unit ?player1 ?unit1)
+							(at ?unit1 ?loc)
 							(at ?per1 ?loc)
-							(empty ?car1)
+							(empty ?unit1)
 							(waiting ?per1))
 		:effect 	  (and
-							(not (empty ?car1))
-							(inside ?per1 ?car1)))
+							(not (empty ?unit1))
+							(inside ?per1 ?unit1)))
 
 
 
 	(:action unload
-		:parameters (?car1 - car ?loc - location ?per1 - person)
+		:parameters (?player1 - player ?unit1 - unit ?loc - location ?per1 - person)
 		:precondition (and 
-							(at ?car1 ?loc)
-							(inside ?per1 ?car1)
+							(at ?unit1 ?loc)
+							(inside ?per1 ?unit1)
 							(destination ?per1 ?loc))
 		:effect 	  (and
 							(not (waiting ?per1))
-							(not (inside ?per1 ?car1))
-							(empty ?car1)
+							(not (inside ?per1 ?unit1))
+							(empty ?unit1)
 							(increase (total-revenue) (payment ?per1)))
 
