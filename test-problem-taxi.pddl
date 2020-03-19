@@ -15,8 +15,8 @@
 		   (empty car1)
 		   (at pas1 loc2)
 		   (waiting pas1)
-		   (= (total-revenue ?player1) 0)
-		   (= (total-revenue ?player2) 0)
+		   (= (total-revenue player1) 0)
+		   (= (total-revenue player2) 0)
 		   (destination pas1 loc5)
 		   (= (payment pas1) 100)
 
