@@ -10,7 +10,7 @@ class TaxiProblemGenerator:
 
     FILE_STRUCTURE = {"objects": {}, "init": {}, "goal": {}, "metric": {}}
 
-    def __init__(self, random_map=True, nnodes=10, nplayers=2, units_details={},  map=None):
+    def __init__(self, random_map=True, nnodes=10, nplayers=2, npassengers=4, units_details={},  map=None):
         """
         Initialization of the problem instance
         :param random_map: bool,
@@ -33,15 +33,19 @@ class TaxiProblemGenerator:
 
         self.players = self.create_players(nplayers)
         self.units = self.create_assign_units(units_details)
+        self.passengers = self.create_passengers(npassengers)
 
         TaxiProblemGenerator.FILE_STRUCTURE["objects"].update({"player": [str(pl) for pl in self.players]})
         TaxiProblemGenerator.FILE_STRUCTURE["objects"].update({"unit": [str(un) for un in self.units]})
+        TaxiProblemGenerator.FILE_STRUCTURE["objects"].update({"person": [str(pr) for pr in self.passengers]})
         TaxiProblemGenerator.FILE_STRUCTURE["objects"].update({"location": [str(loc) for loc in self.map.get_objects()]})
 
         TaxiProblemGenerator.FILE_STRUCTURE["init"].update({"player": [pl.get_initial_state() for pl in self.players]})
         TaxiProblemGenerator.FILE_STRUCTURE["init"].update({"unit": [un.get_initial_state() for un in self.units]})
+        TaxiProblemGenerator.FILE_STRUCTURE["init"].update({"person": [pr.get_initial_state() for pr in self.passengers]})
         TaxiProblemGenerator.FILE_STRUCTURE["init"].update({"location": self.map.get_initial_state()})
 
+        TaxiProblemGenerator.FILE_STRUCTURE["goal"].update({"person": [pr.goal_state() for pr in self.passengers]})
 
     @staticmethod
     def create_players(n):
@@ -82,6 +86,14 @@ class TaxiProblemGenerator:
             all_units.extend(player.get_units())
         return all_units
 
+    def create_passengers(self, npas):
+        passengers = []
+        for i in range(npas):
+            passengers.append(Person(self.map))
+        return passengers
+
+
+
     def visualize_map(self):
         """
         Visualization of a map
@@ -109,8 +121,8 @@ class TaxiProblemGenerator:
             for object_initial_states in self.FILE_STRUCTURE["init"][key]:
                 init += "\n\t\t".join(object_initial_states) + "\n\t\t"
             init += "\n\t\t"
-
-        for key in self.FILE_STRUCTURE["goal"]:
+        # adding the goal
+        for key in self.FILE_STRUCTURE["goal"]["person"]:
             goal += key + "\n\t\t"
 
         template = template.format(problem_name, objects, init, goal)

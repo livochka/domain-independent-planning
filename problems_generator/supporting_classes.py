@@ -3,7 +3,9 @@ from map import Node, Connection, Map
 from random import randint
 
 class Unit(ABC):
-
+    """
+    Abstract base class that represents a unit
+    """
     FACT_AT = "(at {} {})"
     FACT_EMPTY = "(empty {})"
 
@@ -41,25 +43,46 @@ class Car(Unit):
 class Person:
 
     ID = 0
+    FACT_AT = "(at {} {})"
+    FACT_DESTINATION = "(destination {} {})"
+    FACT_WAITING = "(waiting {})"
+    FACT_PAYMENT = "(= (payment {}) {})"
 
     def __init__(self, map):
         self.map = map
+        self.number = Person.ID
+        Person.ID += 1
 
         start, goal, distance = self.generate_ride()
         self.location = start
         self.destination = goal
-        self.payment = None
+        self.payment = self.pricing_policy(distance)
+
 
     def generate_ride(self):
-        start = randint(len(self.map))
-        goal = randint(len(self.map))
+        start = randint(0, len(self.map) - 1)
+        goal = randint(0, len(self.map) - 1)
         while goal == start:
-            goal = randint(len(self.map))
+            goal = randint(0, len(self.map) - 1)
+        print(start, goal)
         distance = self.map.get_distance(start, goal)
+        print(distance)
         return self.map.get_node(start), self.map.get_node(goal), distance
 
-    def pricing_policy(self, distance, fc=50, vc=10):
+    def pricing_policy(self, distance, fc=30, vc=10):
         return fc + vc * distance
+
+    def __str__(self):
+        return Person.__name__.lower() + str(self.number)
+
+    def get_initial_state(self):
+        return [Person.FACT_AT.format(str(self), str(self.location)),
+                Person.FACT_DESTINATION.format(str(self), str(self.destination)),
+                Person.FACT_WAITING.format(str(self)),
+                Person.FACT_PAYMENT.format(str(self), str(self.payment))]
+
+    def goal_state(self):
+        return Person.FACT_AT.format(str(self), str(self.destination))
 
 
 

@@ -5,6 +5,9 @@ from math import floor, sqrt
 
 
 class Connection:
+    """
+    Represents a connection between two nodes in a graph
+    """
 
     FACT_CONNECTED = "(connected {} {})"
     FACT_DISTANCE = "(= (distance {} {}) {})"
@@ -16,6 +19,10 @@ class Connection:
             self.distance += 1
 
     def get_initial_state(self):
+        """
+        Generating initial state, the fact of connection and distance between two nodes
+        :return: list(str1, str2...) in form ["(connected n1 n2)" ... ]
+        """
         return [Connection.FACT_CONNECTED.format(str(self.nodes[0]), str(self.nodes[1])),
                 Connection.FACT_CONNECTED.format(str(self.nodes[1]), str(self.nodes[0])),
                 Connection.FACT_DISTANCE.format(str(self.nodes[0]), str(self.nodes[1]), str(self.distance)),
@@ -23,6 +30,9 @@ class Connection:
 
 
 class Node:
+    """
+    Represents a node in the graph
+    """
 
     ID = 0
     CHAR = "n"
@@ -68,8 +78,6 @@ class Map:
 
     def get_initial_state(self):
         return [connection.get_initial_state() for connection in self.connections]
-
-
 
     def visualize(self):
         nx.draw(self.graph, nx.get_node_attributes(self.graph, 'pos'),
