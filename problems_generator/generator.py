@@ -45,7 +45,7 @@ class TaxiProblemGenerator:
         TaxiProblemGenerator.FILE_STRUCTURE["init"].update({"person": [pr.get_initial_state() for pr in self.passengers]})
         TaxiProblemGenerator.FILE_STRUCTURE["init"].update({"location": self.map.get_initial_state()})
 
-        TaxiProblemGenerator.FILE_STRUCTURE["goal"].update({"person": [pr.goal_state() for pr in self.passengers]})
+        #TaxiProblemGenerator.FILE_STRUCTURE["goal"].update({"person": [pr.goal_state() for pr in self.passengers]})
 
     @staticmethod
     def create_players(n):
@@ -90,6 +90,10 @@ class TaxiProblemGenerator:
         passengers = []
         for i in range(npas):
             passengers.append(Person(self.map))
+
+        for pl in self.players:
+            pl.add_passengers(passengers)
+
         return passengers
 
 
@@ -108,7 +112,7 @@ class TaxiProblemGenerator:
 
     def to_pddl(self, problem_name):
         template = "(define (problem {})\n\t(:domain taxi)\n\t" \
-                   "(:objects: {})\n\t(:init {})\n\t(:goal {})\n\t(:metric maximize (total-revenue))"
+                   "(:objects: {})\n\t(:init {})\n\t{}"
 
         objects, init, goal = "\n\t\t", "\n\t\t", ""
 
@@ -121,11 +125,16 @@ class TaxiProblemGenerator:
             for object_initial_states in self.FILE_STRUCTURE["init"][key]:
                 init += "\n\t\t".join(object_initial_states) + "\n\t\t"
             init += "\n\t\t"
-        # adding the goal
-        for key in self.FILE_STRUCTURE["goal"]["person"]:
-            goal += key + "\n\t\t"
+        # adding the goal and the metric
+        for players in self.players:
+            goal += players.goal() + "\n\n\t"
+            goal += players.metric() + "\n\n\t"
+
 
         template = template.format(problem_name, objects, init, goal)
+
+
+
 
         with open("problem-{}.pddl".format(problem_name), "w") as file:
             file.writelines(template)

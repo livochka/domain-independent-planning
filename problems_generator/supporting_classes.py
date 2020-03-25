@@ -81,24 +81,24 @@ class Person:
                 Person.FACT_WAITING.format(str(self)),
                 Person.FACT_PAYMENT.format(str(self), str(self.payment))]
 
-    def goal_state(self):
-        return Person.FACT_AT.format(str(self), str(self.destination))
-
-
 
 class Player:
 
     ID = 0
     FACT_ENEMY = "(is-enemy {} {})"
     FACT_OWNS_UNIT = "(has-unit {} {})"
-    FACT_TOTAL_REVENUE = "(= (total-revenue {}) 0)"
+    PREFERENCES = "(preference {} (is-delivered {} {}))"
+    VIOLATED = "(* {} - 1 (is-violated {}))"
+    GOAL = "(:goal (and \n\t\t{}))"
+    METRIC = "(:metric {} (+ \n\t\t{}))"
 
-    def __init__(self, units=None, enemies=None):
+    def __init__(self, units=None, enemies=None, passengers=None):
         self.number = Player.ID
         Player.ID += 1
 
         self.units = units
         self.enemies = enemies
+        self.passengers = passengers
 
     def __str__(self):
         return Player.__name__.lower() + str(self.number)
@@ -118,11 +118,31 @@ class Player:
     def get_units(self):
         return self.units
 
+    def add_passengers(self,passengers):
+        self.passengers = passengers
+
     def get_initial_state(self):
-        facts = [Player.FACT_TOTAL_REVENUE.format(str(self))]
+        facts = []
         for enemy in self.enemies:
             facts.append(Player.FACT_ENEMY.format(str(self), str(enemy)))
         for unit in self.units:
             facts.append(Player.FACT_OWNS_UNIT.format(str(self), str(unit)))
-
         return facts
+
+    def goal(self):
+        preferences = []
+        for pas in self.passengers:
+            pref_name = '-'.join(["delivered", str(self), str(pas)])
+            preferences.append(Player.PREFERENCES.format(pref_name,  str(pas), str(self)))
+        return Player.GOAL.format("\n\t\t".join(preferences))
+
+    def metric(self, maximize=True):
+        optim = "maximize" if maximize else "minimize"
+        preferences = []
+        for pas in self.passengers:
+            pref_name = '-'.join(["delivered", str(self), str(pas)])
+            preferences.append(Player.VIOLATED.format(str(pas.payment), pref_name))
+        return Player.METRIC.format(optim, "\n\t\t".join(preferences))
+
+
+
