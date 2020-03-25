@@ -112,7 +112,7 @@ class TaxiProblemGenerator:
 
     def to_pddl(self, problem_name):
         template = "(define (problem {})\n\t(:domain taxi)\n\t" \
-                   "(:objects: {})\n\t(:init {})\n\t{}"
+                   "(:objects {})\n\t(:init {})\n\t{}"
 
         objects, init, goal = "\n\t\t", "\n\t\t", ""
 

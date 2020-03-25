@@ -28,10 +28,7 @@
 
 
 	(:durative-action move
-		:parameters (?player1 - player)
-		            (?unit1 - unit)
-					(?locfrom - location)
-					(?locto - location)
+		:parameters (?player1 - player ?unit1 - unit ?locfrom - location ?locto - location)
 		:duration (= ?duration (distance ?locfrom ?locto))
 		:condition (and
 						(over all (has-unit ?player1 ?unit1))
@@ -44,10 +41,7 @@
 
 
 	(:durative-action load
-		:parameters (?player1 - player)
-		            (?unit1 - unit)
-		            (?loc - location)
-		            (?per1 - person)
+		:parameters (?player1 - player ?unit1 - unit ?loc - location ?per1 - person)
 		:duration (= ?duration 1)
 		:condition (and
 						(over all (has-unit ?player1 ?unit1))
@@ -63,10 +57,7 @@
 
 	(:durative-action unload
 
-		:parameters (?player1 - player)
-		            (?unit1 - unit)
-		            (?loc - location)
-		            (?per1 - person)
+		:parameters (?player1 - player ?unit1 - unit ?loc - location ?per1 - person)
 		:duration (= ?duration 1)
 		:condition (and
 		                    (over all (has-unit ?player1 ?unit1))
