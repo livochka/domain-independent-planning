@@ -88,7 +88,7 @@ class Player:
     FACT_ENEMY = "(is-enemy {} {})"
     FACT_OWNS_UNIT = "(has-unit {} {})"
     PREFERENCES = "(preference {} (is-delivered {} {}))"
-    VIOLATED = "(* {} - 1 (is-violated {}))"
+    VIOLATED = "(* {} (is-violated {}))"
     GOAL = "(:goal (and \n\t\t{}))"
     METRIC = "(:metric {} (+ \n\t\t{}))"
 
@@ -136,7 +136,7 @@ class Player:
             preferences.append(Player.PREFERENCES.format(pref_name,  str(pas), str(self)))
         return Player.GOAL.format("\n\t\t".join(preferences))
 
-    def metric(self, maximize=True):
+    def metric(self, maximize=False):
         optim = "maximize" if maximize else "minimize"
         preferences = []
         for pas in self.passengers:
