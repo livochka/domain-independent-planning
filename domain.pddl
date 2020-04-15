@@ -16,6 +16,7 @@
 		(connected ?loc1 - location ?loc2 - location)
 		(empty ?obj1 - unit)
 		(inside ?obj1 - person ?obj2 - unit)
+		(carry ?obj - person ?pl - player)
 		(waiting ?oj1 - person)
 		(destination ?obj1 - person ?loc1 - location))
 
@@ -49,7 +50,8 @@
 						(at start (at ?per1 ?loc))
 						(at start (empty ?unit1))
 						(over all (waiting ?per1)))
-		:effect    (and
+		:effect    (and			
+						(over all (carry ?per1 ?player1))
 						(at end (not (empty ?unit1)))
 						(at end (inside ?per1 ?unit1))))
 
@@ -64,7 +66,8 @@
 							(at start (at ?unit1 ?loc))
 							(at start (inside ?per1 ?unit1))
 							(over all (destination ?per1 ?loc)))
-		:effect 	  (and
+		:effect 	  (and			
+							(at end (not (carry ?per1 ?player1)))
 							(at end (not (waiting ?per1)))
 							(at end (not (inside ?per1 ?unit1)))
 							(at end (empty ?unit1))
