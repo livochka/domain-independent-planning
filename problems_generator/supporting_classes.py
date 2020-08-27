@@ -6,7 +6,7 @@ class Unit(ABC):
     """
     Abstract base class that represents a unit
     """
-    FACT_AT = "(at {} {})"
+    FACT_AT = "(at-unit {} {})"
     FACT_EMPTY = "(empty {})"
 
     def __init__(self, number, location=None):
@@ -43,9 +43,8 @@ class Car(Unit):
 class Person:
 
     ID = 0
-    FACT_AT = "(at {} {})"
+    FACT_AT = "(at-person {} {})"
     FACT_DESTINATION = "(destination {} {})"
-    FACT_WAITING = "(waiting {})"
     FACT_PAYMENT = "(= (payment {}) {})"
 
     def __init__(self, map):
@@ -70,7 +69,8 @@ class Person:
         return self.map.get_node(start), self.map.get_node(goal), distance
 
     def pricing_policy(self, distance, fc=30, vc=10):
-        return fc + vc * distance
+        random_factor = randint(0, 50)
+        return fc + vc * distance + random_factor
 
     def __str__(self):
         return Person.__name__.lower() + str(self.number)
@@ -78,7 +78,6 @@ class Person:
     def get_initial_state(self):
         return [Person.FACT_AT.format(str(self), str(self.location)),
                 Person.FACT_DESTINATION.format(str(self), str(self.destination)),
-                Person.FACT_WAITING.format(str(self)),
                 Person.FACT_PAYMENT.format(str(self), str(self.payment))]
 
 
